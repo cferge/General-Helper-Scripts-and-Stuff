@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  container:
+    image: debian:11-slim
+    environment:
+      - TZ=America/New_York
+    ports:
+      - "80:80"
+      - "443:443"
+      - "10000:10000"
+      - "20000:20000"
+      - "3306:3306"
+    volumes:
+      - /home/cferge/Docker/virtualmin/sqldata:/var/lib/mysql
+      - /home/cferge/Docker/virtualmin/hosting-etc:/etc 
+      - /home/cferge/Docker/virtualmin/hosting-home:/home 
+      - /home/cferge/Docker/virtualmin/hosting-lib:/var/lib
+      - /home/cferge/Docker/virtualmin/hosting-log:/var/log
+      - /home/cferge/Docker/virtualmin/hosting-www:/var/www
+    restart: always

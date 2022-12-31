@@ -1,0 +1,28 @@
+version: '3'
+services:
+  my-container:
+    image: shinsenter/codeigniter4:latest
+    volumes:
+      - /home/cferge/Docker/www_root:/var/www/html
+      - /home/cferge/Docker/ssl-certs:/etc/ssl/web
+    environment:
+      TZ: UTC
+      PUID: ${UID:-9999}
+      PGID: ${GID:-9999}
+    ports:
+      - "8080:80"
+      - "8443:443"
+    links:
+      - mysql
+
+  mysql:
+    image: mysql:latest
+    environment:
+      TZ: UTC
+      MYSQL_ROOT_PASSWORD: mydb_p@ssw0rd
+      MYSQL_DATABASE: my_database
+    volumes:
+      - "/home/cferge/Docker/mysql/data:/var/lib/mysql"
+      - "/home/cferge/Docker/mysql/dump:/docker-entrypoint-initdb.d"
+    ports:
+      - "3306:3306"

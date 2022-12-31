@@ -1,0 +1,51 @@
+# Docker compose file for Observium
+# Maintained by somsakc@hotmail.com
+
+version: '3'
+
+services:
+  db:
+    image: mariadb:10.6.4
+    environment:
+      - MYSQL_ROOT_PASSWORD=passw0rd
+      - MYSQL_USER=observium
+      - MYSQL_PASSWORD=passw0rd
+      - MYSQL_DATABASE=observium
+      - TZ=Asia/Bangkok
+    volumes:
+      - /home/cferge/OMV_NFS/NetworkServices/Docker/Observium/sqldata:/var/lib/mysql
+    networks:
+      - back-tier
+    restart: always
+
+  app:
+    image: mbixtech/observium:21.10
+    environment:
+      - OBSERVIUM_ADMIN_USER=admin
+      - OBSERVIUM_ADMIN_PASS=passw0rd
+      - OBSERVIUM_DB_HOST=db
+      - OBSERVIUM_DB_NAME=observium
+      - OBSERVIUM_DB_USER=observium 
+      - OBSERVIUM_DB_PASS=passw0rd
+      - OBSERVIUM_BASE_URL=http://observium.mbixtech.com:8888
+      - TZ=Asia/Bangkok
+    volumes:
+      - /home/cferge/OMV_NFS/NetworkServices/Docker/Observium/Config:/config
+      - /home/cferge/OMV_NFS/NetworkServices/Docker/Observium/Logs:/opt/observium/logs
+      - /home/cferge/OMV_NFS/NetworkServices/Docker/Observium/RRDs:/opt/observium/rrd
+    networks:
+      - back-tier
+    ports:
+      - "8888:80"
+    restart: always
+    depends_on:
+      - db
+
+networks:
+  back-tier:
+      driver: bridge
+
+
+
+
+
